@@ -1,0 +1,27 @@
+{
+  "name": "whatsapp-attendance-bot",
+  "version": "1.0.0",
+  "description": "WhatsApp Attendance Management Bot for Teachers",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node index.js"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "dependencies": {
+    "node-schedule": "^2.1.1",
+    "qrcode-terminal": "^0.12.0",
+    "whatsapp-web.js": "^1.34.1"
+  },
+  "keywords": [
+    "whatsapp",
+    "bot",
+    "attendance",
+    "education",
+    "teacher"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
+}
