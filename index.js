@@ -2,7 +2,6 @@ const { Client, LocalAuth, Buttons } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 const fs = require('fs');
 const schedule = require('node-schedule');
-const express = require('express');
 
 // Load or initialize attendance data
 let attendance = {};
@@ -83,41 +82,10 @@ async function sendStudentNotification(studentId, message){
     }
 }
 
-// Create Express app for health check
-const app = express();
-const PORT = process.env.PORT || 3000;
-
-// Health check endpoint
-app.get('/', (req, res) => {
-    res.status(200).json({
-        status: 'healthy',
-        service: 'WhatsApp Attendance Bot',
-        timestamp: new Date().toISOString(),
-        uptime: process.uptime()
-    });
-});
-
-// Start Express server
-app.listen(PORT, () => {
-    console.log(`🌐 Health check server running on port ${PORT}`);
-});
-
 // Start client
 const client = new Client({
     authStrategy: new LocalAuth(),
-    puppeteer: { 
-        headless: true, 
-        args: [
-            '--no-sandbox',
-            '--disable-setuid-sandbox',
-            '--disable-dev-shm-usage',
-            '--disable-accelerated-2d-canvas',
-            '--no-first-run',
-            '--no-zygote',
-            '--single-process',
-            '--disable-gpu'
-        ]
-    }
+    puppeteer: { headless: false, args: ['--no-sandbox'] }
 });
 
 client.on('qr', qr => {
@@ -129,7 +97,7 @@ client.on('ready', () => {
     console.log('✅ Bot is ready!');
 });
 
-const BOT_GROUP_ID =  '120363420628239379@g.us'; // Update this with your actual group ID after deployment
+const BOT_GROUP_ID =  '120363420628239379@g.us'; // replace after setup
 let awaitingSubject = {};
 let awaitingTeacherName = {};
 let awaitingStudentName = {};
