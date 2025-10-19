@@ -97,7 +97,7 @@ client.on('ready', () => {
     console.log('✅ Bot is ready!');
 });
 
-const BOT_GROUP_ID =  '120363420628239379@g.us'; // replace after setup
+const BOT_GROUP_ID =  '120363420628239379@g.us'; // Update this with your actual group ID after deployment
 let awaitingSubject = {};
 let awaitingTeacherName = {};
 let awaitingStudentName = {};
@@ -151,7 +151,10 @@ Examples:
 • +919876543210
 • +447123456789
 
-Make sure to include the country code!`);
+💡 Important:
+• Include the country code (+)
+• Make sure the student has WhatsApp
+• The student will receive attendance notifications!`);
         return;
     }
 
@@ -235,11 +238,17 @@ Select a student to mark attendance:
         if(!isTeacher(from)){
             msg.reply(`🎓 Welcome to Attendance Bot!
 
-To get started, you need to register as a teacher first.
+This bot helps teachers manage student attendance easily.
 
-📝 Send: /register
+📝 To get started, send: /register
 
-Then follow the simple steps to set up your classes!`);
+Then follow these steps:
+1️⃣ Register as a teacher
+2️⃣ Add your subjects
+3️⃣ Add your students
+4️⃣ Start marking attendance!
+
+💡 Need help? Send: /help`);
             return;
         }
 
@@ -252,9 +261,61 @@ What would you like to do today?
 👥 2 - Manage students  
 ✅ 3 - Mark student attendance
 📊 4 - Check attendance reports
-⚙️ 5 - View all subjects
+⚙️ 5 - View all subjects & alerts
 
-Just type the number (1, 2, 3, 4, or 5) to choose!`);
+Just type the number (1, 2, 3, 4, or 5) to choose!
+
+💡 Send /help for detailed instructions`);
+        return;
+    }
+
+    // Help command
+    if(text === '/help'){
+        if(!isTeacher(from)){
+            msg.reply(`📚 Attendance Bot Help
+
+🎯 Getting Started:
+1. Send /register to register as a teacher
+2. Add your subjects using option 1
+3. Add students using option 2
+4. Mark attendance using option 3
+
+📋 Main Commands:
+• /start - Main menu
+• /register - Register as teacher
+• /help - Show this help
+
+💡 After registration, use numbers 1-5 for quick access!`);
+            return;
+        }
+
+        msg.reply(`📚 Attendance Bot Help
+
+🎯 Main Menu Options:
+1️⃣ Add Subject - Add new subjects to track
+2️⃣ Manage Students - Add/view students
+3️⃣ Mark Attendance - Record student attendance
+4️⃣ Check Reports - View attendance reports
+5️⃣ View All - See all subjects and alerts
+
+📋 Quick Commands:
+• /start - Main menu
+• /add - Add subject
+• /students - Student management
+• /mark - Mark attendance
+• /view - View subjects
+• /alert - Check low attendance
+
+👥 Student Management:
+• Type 2, then A to add student
+• Type 2, then B to view students
+
+✅ Marking Attendance:
+• Type 3, then select subject
+• Use student.X P/A/H/N format
+• Or use "bulk" for all students
+
+💡 Need more help? Contact your admin!`);
         return;
     }
 
@@ -265,7 +326,13 @@ Just type the number (1, 2, 3, 4, or 5) to choose!`);
 
 Please send your full name to register as a teacher.
 
-Example: Dr. John Smith`);
+Example: Dr. John Smith
+
+💡 After registration, you can:
+• Add subjects
+• Add students  
+• Mark attendance
+• View reports`);
         return;
     }
 
@@ -281,7 +348,9 @@ Examples:
 • Physics
 • Chemistry
 • English
-• History`);
+• History
+
+💡 You can add multiple subjects. Each subject will track attendance separately.`);
         return;
     }
 
@@ -290,24 +359,28 @@ Examples:
 
 What would you like to do?
 
-➕ 1 - Add a new student
-📋 2 - View all students
+➕ A - Add a new student
+📋 B - View all students
 
-Type 1 or 2 to choose!`);
+Type A or B to choose!
+
+💡 Students will receive attendance notifications on their WhatsApp!`);
         return;
     }
 
-    if(text === '2.1' && isTeacher(from)){
+    if(text === '2a' && isTeacher(from)){
         awaitingStudentName[from] = true;
         msg.reply(`👤 Add New Student
 
 Please send the student's full name.
 
-Example: John Doe`);
+Example: John Doe
+
+💡 Make sure the student has WhatsApp and their phone number is correct!`);
         return;
     }
 
-    if(text === '2.2' && isTeacher(from)){
+    if(text === '2b' && isTeacher(from)){
         const studentList = getStudentsForTeacher(from);
         let studentMsg = '👥 Your Students:\n\n';
         if(studentList.length === 0){
@@ -338,7 +411,8 @@ Select a subject:
         subjectList += `\nExamples:\n`;
         subjectList += `• Send "subject.1" to select the first subject\n`;
         subjectList += `• Send "subject.2" to select the second subject\n`;
-        subjectList += `• Send "subject.3" to select the third subject`;
+        subjectList += `• Send "subject.3" to select the third subject\n\n`;
+        subjectList += `💡 After selecting a subject, you can mark attendance for each student individually or use "bulk" for all students at once!`;
         msg.reply(subjectList);
         return;
     }
@@ -371,14 +445,16 @@ Mark attendance for each student:
                 index++;
             }
             
-            attendanceList += `To mark attendance, send:\n`;
+            attendanceList += `📝 To mark attendance, send:\n`;
             attendanceList += `"student.[number] [P/A/H/N]"\n\n`;
             attendanceList += `Examples:\n`;
             attendanceList += `• "student.1 P" - Mark student 1 as Present\n`;
             attendanceList += `• "student.2 A" - Mark student 2 as Absent\n`;
             attendanceList += `• "student.3 H" - Mark student 3 as Holiday\n`;
             attendanceList += `• "student.4 N" - Mark student 4 as No Class\n\n`;
-            attendanceList += `Or send "bulk" to mark all students at once!`;
+            attendanceList += `💡 Quick options:\n`;
+            attendanceList += `• Send "bulk" to mark all students at once\n`;
+            attendanceList += `• Students will receive WhatsApp notifications!`;
             
             awaitingAttendanceStudent[from] = { subject: subject, studentList: studentList };
             msg.reply(attendanceList);
@@ -393,7 +469,7 @@ Mark attendance for each student:
         
         let subjectList = `📊 Check Attendance Reports
 
-Select a subject to view reports:
+Select a subject to view detailed reports:
 
 `;
         let index = 1;
@@ -406,7 +482,8 @@ Select a subject to view reports:
         }
         subjectList += `Examples:\n`;
         subjectList += `• Send "report.1" to view first subject report\n`;
-        subjectList += `• Send "report.2" to view second subject report`;
+        subjectList += `• Send "report.2" to view second subject report\n\n`;
+        subjectList += `💡 Reports show individual student attendance and overall percentages!`;
         msg.reply(subjectList);
         return;
     }
@@ -451,21 +528,6 @@ Student Details:
     }
 
     if(text === '5' && isTeacher(from)){
-        let alertMsg = '⚠️ Your subjects below 75%:\n';
-        let low = false;
-        for(let s in attendance[from] || {}){
-            const pct = calcPercent(from, s);
-            if(pct < 75){
-                alertMsg += `${s}: ${pct}%\n`;
-                low = true;
-            }
-        }
-        if(!low) alertMsg = '✅ All your subjects are above 75%.';
-        msg.reply(alertMsg);
-        return;
-    }
-
-    if(text === '6' && isTeacher(from)){
         let viewMsg = `📊 ${getTeacherName(from)}'s Subjects:\n\n`;
         if(Object.keys(attendance[from] || {}).length === 0){
             viewMsg += 'No subjects added yet.';
@@ -476,7 +538,20 @@ Student Details:
                 viewMsg += `${s}: ${pct}% (${status})\n`;
             }
         }
-        msg.reply(viewMsg);
+        
+        // Add alerts for low attendance
+        let alertMsg = '\n⚠️ Subjects below 75%:\n';
+        let low = false;
+        for(let s in attendance[from] || {}){
+            const pct = calcPercent(from, s);
+            if(pct < 75){
+                alertMsg += `${s}: ${pct}%\n`;
+                low = true;
+            }
+        }
+        if(!low) alertMsg = '\n✅ All subjects are above 75%.';
+        
+        msg.reply(viewMsg + alertMsg);
         return;
     }
 
@@ -633,6 +708,25 @@ Student Details:
         return;
     }
 
+    // Student help command
+    if(text === '/help' && isStudent(from)){
+        const student = students[from];
+        const teacherName = getTeacherName(student.teacherId);
+        
+        msg.reply(`📚 Student Help
+
+👋 Hello ${student.name}!
+
+Your teacher: ${teacherName}
+
+📋 Available Commands:
+• /myattendance - Check your attendance report
+• /help - Show this help
+
+💡 You'll receive attendance notifications from your teacher on WhatsApp!`);
+        return;
+    }
+
     // Handle list-based attendance marking (student.X P/A/H/N)
     if(text.match(/^student\.\d+\s+[PAHN]$/) && awaitingAttendanceStudent[from] && isTeacher(from)){
         const parts = text.split(' ');
@@ -700,7 +794,7 @@ Mark all students at once:
 🟡 Send "bulk H" - Mark all as Holiday
 📚 Send "bulk N" - Mark all as No Class
 
-Or send "bulk mixed" for individual choices.`);
+💡 All students will receive WhatsApp notifications with their attendance status!`);
         
         awaitingAttendanceStudent[from].bulkMode = true;
         return;
