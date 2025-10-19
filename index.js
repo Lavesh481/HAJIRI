@@ -2,6 +2,7 @@ const { Client, LocalAuth, Buttons } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 const fs = require('fs');
 const schedule = require('node-schedule');
+const http = require('http');
 
 // Load or initialize attendance data
 let attendance = {};
@@ -85,7 +86,18 @@ async function sendStudentNotification(studentId, message){
 // Start client
 const client = new Client({
     authStrategy: new LocalAuth(),
-    puppeteer: { headless: false, args: ['--no-sandbox'] }
+    puppeteer: { 
+        headless: true, 
+        args: [
+            '--no-sandbox',
+            '--disable-setuid-sandbox',
+            '--disable-dev-shm-usage',
+            '--disable-accelerated-2d-canvas',
+            '--no-first-run',
+            '--no-zygote',
+            '--disable-gpu'
+        ]
+    }
 });
 
 client.on('qr', qr => {
@@ -1072,6 +1084,46 @@ schedule.scheduleJob('0 8 * * *', async ()=>{
             }
         }
     }
+});
+
+// Create HTTP server for health checks
+const server = http.createServer((req, res) => {
+    if (req.url === '/') {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ 
+            status: 'ok', 
+            message: 'WhatsApp Attendance Bot is running',
+            timestamp: new Date().toISOString()
+        }));
+    } else {
+        res.writeHead(404, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Not found' }));
+    }
+});
+
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+    console.log(`🚀 Server running on port ${PORT}`);
+    console.log(`📊 Health check available at http://localhost:${PORT}/`);
+});
+
+// Error handling for production
+process.on('uncaughtException', (error) => {
+    console.error('Uncaught Exception:', error);
+    // Don't exit in production, let Railway restart if needed
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
+// Graceful shutdown
+process.on('SIGTERM', () => {
+    console.log('SIGTERM received, shutting down gracefully');
+    server.close(() => {
+        console.log('Server closed');
+        process.exit(0);
+    });
 });
 
 client.initialize();
