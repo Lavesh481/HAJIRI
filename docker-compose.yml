@@ -1,0 +1,21 @@
+services:
+  hajiri-bot:
+    build: .
+    container_name: hajiri-attendance-bot
+    restart: unless-stopped
+    volumes:
+      # Persist WhatsApp session data
+      - ./.wwebjs_auth:/app/.wwebjs_auth
+      - ./.wwebjs_cache:/app/.wwebjs_cache
+      # Persist attendance data
+      - ./attendance.json:/app/attendance.json
+      # QR code image file
+      - ./whatsapp-qr.png:/app/whatsapp-qr.png
+    env_file:
+      - .env.docker
+    shm_size: '2gb'
+    # Uncomment if you need to expose any ports
+    # ports:
+    #   - "3000:3000"
+    stdin_open: true
+    tty: true

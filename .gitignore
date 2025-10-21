@@ -54,3 +54,15 @@ jspm_packages/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Python virtual environment
+venv/
+__pycache__/
+*.pyc
+
+# Backup files
+*.bak
+*.backup
+
+# Docker environment (keep .env.docker as template)
+# .env.docker is tracked as a template

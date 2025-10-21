@@ -27,11 +27,25 @@ A powerful WhatsApp bot for teachers to manage student attendance with individua
 
 ## Deployment
 
-This bot can be deployed on:
+### 🐳 Docker Deployment (Recommended)
+
+**Quick Start:**
+```bash
+docker-compose up -d
+docker-compose logs -f  # Scan the QR code
+```
+
+See [QUICK_START_DOCKER.md](./QUICK_START_DOCKER.md) for quick reference or [DOCKER_DEPLOYMENT.md](./DOCKER_DEPLOYMENT.md) for complete documentation.
+
+### Other Deployment Options
+
+This bot can also be deployed on:
 - Heroku
 - Railway
 - VPS/Cloud servers
 - Local machine
+
+See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed instructions.
 
 ## Requirements
 

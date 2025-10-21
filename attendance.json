@@ -4,12 +4,35 @@
       "+1": {
         "2@c.us": {}
       }
-    }
+    },
+    "teacher_6425": {
+      "math": {}
+    },
+    "917568821808@c.us": {
+      "English": {
+        "3@c.us": {}
+      },
+      "Chinese": {},
+      "Hindi": {}
+    },
+    "918107681738@c.us": {}
   },
   "teachers": {
     "120363420628239379@g.us": {
       "name": "Nivesh",
       "registeredAt": "2025-10-19T03:19:11.893Z"
+    },
+    "teacher_6425": {
+      "name": "Lavesh",
+      "registeredAt": "2025-10-19T13:50:10.785522"
+    },
+    "917568821808@c.us": {
+      "name": "Lavesh",
+      "registeredAt": "2025-10-20T04:58:59.700Z"
+    },
+    "918107681738@c.us": {
+      "name": "123",
+      "registeredAt": "2025-10-20T06:47:11.170Z"
     }
   },
   "students": {
@@ -24,6 +47,18 @@
       "phone": "2",
       "teacherId": "120363420628239379@g.us",
       "registeredAt": "2025-10-19T07:03:18.713Z"
+    },
+    "8882371548@c.us": {
+      "name": "Lucky",
+      "phone": "8882371548",
+      "teacherId": "917568821808@c.us",
+      "registeredAt": "2025-10-20T05:13:44.851Z"
+    },
+    "3@c.us": {
+      "name": "3",
+      "phone": "3",
+      "teacherId": "917568821808@c.us",
+      "registeredAt": "2025-10-20T05:15:19.508Z"
     }
   }
 }
